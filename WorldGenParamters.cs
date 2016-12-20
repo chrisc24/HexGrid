@@ -24,6 +24,7 @@ namespace howto_hexagonal_grid
             HexHeight = 20,
             FontSize = 10,
             GlyphsEnabled = true,
+            WrapEastWest = false,
             };
         }
 

@@ -82,6 +82,7 @@
     <Compile Include="TerainController.cs" />
     <Compile Include="Terrain.cs" />
     <Compile Include="TerrainAdjacentcy.cs" />
+    <Compile Include="WorldController.cs" />
     <Compile Include="WorldGenParamters.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

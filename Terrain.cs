@@ -26,9 +26,6 @@ namespace howto_hexagonal_grid
         Ice
     }
 
-    
-
-
     public class Terrain
     {
         public Terrain()
