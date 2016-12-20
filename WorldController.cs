@@ -14,6 +14,9 @@ namespace howto_hexagonal_grid
         private readonly ColorGradient seaGradient = new ColorGradient(Color.LightBlue, Color.DarkBlue);
         private readonly ColorGradient landGradient = new ColorGradient(Color.SaddleBrown, Color.White);
 
+        private int Sealevel = 0;
+
+
         public WorldController()
         {
             this.collection = TerrainController.GenerateWorld(parameters);
@@ -25,8 +28,8 @@ namespace howto_hexagonal_grid
             // Draw the selected hexagons.
             foreach (HexagonData hex in collection.List())
             {
-                //PaintTerrain(hex, e);
-                PaintElevation(collection.MaxElevation, collection.MinElevation, hex, g);
+                PaintTerrain(hex, g);
+                //PaintElevation(collection.MaxElevation, collection.MinElevation, hex, g);
             }
 
             // Draw the grid.
@@ -37,7 +40,7 @@ namespace howto_hexagonal_grid
         private void PaintTerrain(HexagonData hex, Graphics g)
         {
             var color = hex.Terrain.Color;
-            if (hex.Underwater())
+            if (hex.Elevation < Sealevel)
             {
                 color = Brushes.DarkBlue;
             }
@@ -58,14 +61,14 @@ namespace howto_hexagonal_grid
         private void PaintElevation(int max, int min, HexagonData hex, Graphics g)
         {
             Color elevationColor;
-            if (hex.Elevation < 0)
+            if (hex.Elevation < Sealevel)
             {
-                double seaIndex = (double)hex.Elevation / (double)min;
+                double seaIndex = (double)(hex.Elevation - Sealevel) / (double)(min - Sealevel);
                 elevationColor = seaGradient.Get(seaIndex);
             }
             else
             {
-                double landIndex = (double)hex.Elevation / (double)max;
+                double landIndex = (double)(hex.Elevation - Sealevel)/ (double)(max - Sealevel);
                 elevationColor = landGradient.Get(landIndex);
             }
 
@@ -107,7 +110,8 @@ namespace howto_hexagonal_grid
             //        adjacentHex.Terrain = Terrain.EnumMap[TerrainEnum.Tundra];
             //    }
             //}
-            this.collection = TerrainController.GenerateWorld(parameters);
+            Sealevel = Sealevel - 100;
+            //this.collection = TerrainController.GenerateWorld(parameters);
         }
 
         // Return the width of a hexagon.
