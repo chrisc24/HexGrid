@@ -12,7 +12,7 @@ namespace howto_hexagonal_grid
         // Mutates the collection.
         public static void FillAll(HexagonCollection collection, int maxRow)
         {
-            var seeds = collection.List().Where(h => !h.Terrain.NoTerrainFlag);
+            var seeds = collection.List().Where(h => h.Terrain.TerrainEnum != TerrainEnum.NoTerrain);
             if (!seeds.Any())
             {
                 throw new InvalidOperationException("Needs seeds to generate.");
@@ -36,6 +36,7 @@ namespace howto_hexagonal_grid
             var blankAdjacent = command.collection.GetBlankAdjacent(command.hex).OrderBy(x => Guid.NewGuid());
             foreach (var blank in blankAdjacent)
             {
+                Console.WriteLine("FOUND");
                 var nonBlankAdjacent = command.collection.GetNonBlankAdjacent(blank);
 
                 if (nonBlankAdjacent.Count == 0)
@@ -111,12 +112,46 @@ namespace howto_hexagonal_grid
         public static HexagonCollection GenerateWorld(WorldGenParamters world)
         {
             var collection = MakeDefaultHexagons(world.MaxRows, world.MaxCol, world.WrapEastWest);
-            // Seed.
-            collection.Get(0, 0).Terrain = Terrain.EnumMap[TerrainEnum.Grassland];
+ 
+            CenterSeed(collection, world);
+            if (world.WaterSurrounds)
+            {
+                SidesOcean(collection, world);
+            }
+
 
             TerrainController.FillAll(collection, world.MaxRows);
 
             return collection;
+        }
+
+        public static void CenterSeed(HexagonCollection collection, WorldGenParamters world){
+            collection.Get(world.MaxRows/2, world.MaxCol/2).Terrain = Terrain.EnumMap[TerrainEnum.Grassland];
+        }
+
+        public static void SidesOcean(HexagonCollection collection, WorldGenParamters world)
+        {
+            List<int> rows = new List<int>(){ 0, 1, world.MaxRows-2, world.MaxRows-1};
+
+            foreach (int row in rows)
+            {
+                for (int col = 0; col < world.MaxCol; col++)
+                {
+                    collection.Get(row, col).Elevation = -500;
+                }
+            }
+
+            List<int> cols = new List<int>() { 0, world.MaxCol - 1 };
+
+            foreach (int col in cols)
+            {
+                for (int row = 0; row < world.MaxRows; row++)
+                {
+                    var hex = collection.Get(row, col);
+                    hex.Elevation = -500;
+                    hex.Terrain.TerrainEnum = TerrainEnum.Grassland;
+                }
+            }
         }
 
     }

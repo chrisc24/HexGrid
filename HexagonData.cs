@@ -96,12 +96,12 @@ namespace howto_hexagonal_grid
 
         public List<HexagonData> GetBlankAdjacent(HexagonData hex)
         {
-            return GetAdjacent(hex).Where(h => h.Terrain.NoTerrainFlag).ToList();
+            return GetAdjacent(hex).Where(h => h.Terrain.TerrainEnum == TerrainEnum.NoTerrain).ToList();
         }
 
         public List<HexagonData> GetNonBlankAdjacent(HexagonData hex)
         {
-            return GetAdjacent(hex).Where(h => !h.Terrain.NoTerrainFlag).ToList();
+            return GetAdjacent(hex).Where(h => h.Terrain.TerrainEnum != TerrainEnum.NoTerrain).ToList();
         }
 
     }

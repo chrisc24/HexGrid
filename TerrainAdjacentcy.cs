@@ -9,7 +9,7 @@ namespace howto_hexagonal_grid
     {
         private const int SeaLevel = 0;
         private const int MidLevel = 1000;
-        private const int HighLevel = 3000;
+        private const int HighLevel = 2000;
 
         public class TerrainAltitudeAdjustment
         {
@@ -114,9 +114,9 @@ namespace howto_hexagonal_grid
 
             public static TerrainLatitudeAdjustment NoBias = new TerrainLatitudeAdjustment();
             public static TerrainLatitudeAdjustment ExtremePolarBias = new TerrainLatitudeAdjustment() { Polar = 1.2, Temperate = .1, Tropical = 0.0 };
-            public static TerrainLatitudeAdjustment PolarBias = new TerrainLatitudeAdjustment() { Polar = 1.2, Temperate = .6, Tropical = .1 };
-            public static TerrainLatitudeAdjustment TemperateBias = new TerrainLatitudeAdjustment() { Polar = .6, Temperate = 1.2, Tropical = .8 };
-            public static TerrainLatitudeAdjustment TropicalBias = new TerrainLatitudeAdjustment() { Polar = .1, Temperate = .7, Tropical = 1.2 };
+            public static TerrainLatitudeAdjustment PolarBias = new TerrainLatitudeAdjustment() { Polar = .8, Temperate = .6, Tropical = .1 };
+            public static TerrainLatitudeAdjustment TemperateBias = new TerrainLatitudeAdjustment() { Polar = .8, Temperate = 1.1, Tropical = .8 };
+            public static TerrainLatitudeAdjustment TropicalBias = new TerrainLatitudeAdjustment() { Polar = 0.0, Temperate = .7, Tropical = 1.2 };
 
         }
 

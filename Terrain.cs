@@ -33,8 +33,6 @@ namespace howto_hexagonal_grid
             this.TextColor = Brushes.Black;
         }
 
-        public bool NoTerrainFlag { get; set; }
-
         public TerrainEnum TerrainEnum { get; set; }
 
         public String Glyph { get; set; }
@@ -73,7 +71,6 @@ namespace howto_hexagonal_grid
             return new Terrain
             {
                 TerrainEnum = TerrainEnum.NoTerrain,                
-                NoTerrainFlag = true,
                 Color = Brushes.White,
             };
         }

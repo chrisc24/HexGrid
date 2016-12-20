@@ -9,13 +9,13 @@ namespace howto_hexagonal_grid
 {
     public class WorldController
     {
-        private readonly WorldGenParamters parameters = WorldGenParamters.Tiny();
+        private readonly WorldGenParamters parameters = WorldGenParamters.Default();
         private HexagonCollection collection;
         private readonly ColorGradient seaGradient = new ColorGradient(Color.LightBlue, Color.DarkBlue);
         private readonly ColorGradient landGradient = new ColorGradient(Color.SaddleBrown, Color.White);
 
         private int Sealevel = 0;
-
+        private bool showTerrain = true;
 
         public WorldController()
         {
@@ -28,14 +28,43 @@ namespace howto_hexagonal_grid
             // Draw the selected hexagons.
             foreach (HexagonData hex in collection.List())
             {
-                PaintTerrain(hex, g);
-                //PaintElevation(collection.MaxElevation, collection.MinElevation, hex, g);
+                if (showTerrain)
+                {
+                    PaintTerrain(hex, g);
+                }
+                else
+                {
+                    PaintElevation(collection.MaxElevation, collection.MinElevation, hex, g);
+                }
             }
 
             // Draw the grid.
             DrawHexGrid(g, Pens.Black);
         }
 
+        public string MouseOver(int x, int y)
+        {
+            int row, col;
+            PointToHex(x, y, parameters.HexHeight, out row, out col);
+            var hex = collection.Get(row, col);
+            if (hex != null)
+            {
+                var coordinate = String.Format("[{0},{1}]:", col, row).PadRight(10);
+                var terrainEnum = hex.Terrain.TerrainEnum.ToString().PadRight(15);
+                var polar_temp_tropical = String.Format("{0},{1},{2}", TerrainAdjacentcy.Polarness(row, parameters.MaxRows), TerrainAdjacentcy.Temperateness(row, parameters.MaxRows), TerrainAdjacentcy.Tropicalness(row, parameters.MaxRows));
+
+                return string.Format("{0} {1} - {2} *** {3}", coordinate, terrainEnum, hex.Elevation, polar_temp_tropical);
+            }
+            else
+            {
+                return "---";
+            }
+        }
+
+        public void Click(int x, int y)
+        {
+            showTerrain = !showTerrain;
+        }
 
         private void PaintTerrain(HexagonData hex, Graphics g)
         {
@@ -75,7 +104,6 @@ namespace howto_hexagonal_grid
             g.FillPolygon(new SolidBrush(elevationColor), HexToPoints(hex.Row, hex.Col));
         }
 
-
         // Draw a hexagonal grid for the indicated area.
         // (You might be able to draw the hexagons without
         // drawing any duplicate edges, but this is a lot easier.)
@@ -96,22 +124,6 @@ namespace howto_hexagonal_grid
                     gr.DrawPolygon(pen, points);
                 }
             }
-        }
-
-        public void Click(int x, int y)
-        {
-            //int row, col;
-            //PointToHex(e.X, e.Y, parameters.HexHeight, out row, out col);
-            //var hex = collection.Get(row, col);
-            //if (hex != null)
-            //{
-            //    hex.Terrain = Terrain.EnumMap[TerrainEnum.Mountain];
-            //    foreach(var adjacentHex in collection.GetAdjacent(hex)){
-            //        adjacentHex.Terrain = Terrain.EnumMap[TerrainEnum.Tundra];
-            //    }
-            //}
-            Sealevel = Sealevel - 100;
-            //this.collection = TerrainController.GenerateWorld(parameters);
         }
 
         // Return the width of a hexagon.
@@ -173,25 +185,6 @@ namespace howto_hexagonal_grid
             {
                 if (col % 2 == 1) row++;
                 col--;
-            }
-        }
-
-        public string MouseOver(int x, int y)
-        {
-            int row, col;
-            PointToHex(x, y, parameters.HexHeight, out row, out col);
-            var hex = collection.Get(row, col);
-            if (hex != null)
-            {
-                var coordinate = String.Format("[{0},{1}]:", col, row).PadRight(10);
-                var terrainEnum = hex.Terrain.TerrainEnum.ToString().PadRight(15);
-                var polar_temp_tropical = String.Format("{0},{1},{2}", TerrainAdjacentcy.Polarness(row, parameters.MaxRows), TerrainAdjacentcy.Temperateness(row, parameters.MaxRows), TerrainAdjacentcy.Tropicalness(row, parameters.MaxRows));
-
-                return string.Format("{0} {1} - {2} *** {3}", coordinate, terrainEnum, hex.Elevation, polar_temp_tropical);
-            }
-            else
-            {
-                return "---";
             }
         }
 

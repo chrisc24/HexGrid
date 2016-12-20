@@ -17,6 +17,8 @@ namespace howto_hexagonal_grid
 
         public bool WrapEastWest { get; set; }
 
+        public bool WaterSurrounds { get; set; }
+
         public static WorldGenParamters Default() {
             return new WorldGenParamters() {
             MaxRows = 30,
@@ -25,6 +27,7 @@ namespace howto_hexagonal_grid
             FontSize = 10,
             GlyphsEnabled = true,
             WrapEastWest = false,
+            WaterSurrounds = true
             };
         }
 
@@ -35,7 +38,8 @@ namespace howto_hexagonal_grid
                 HexHeight = 8,
                 FontSize = 10,
                 GlyphsEnabled = false,
-                WrapEastWest = true
+                WrapEastWest = true,
+                WaterSurrounds = false
             };
         }
 
